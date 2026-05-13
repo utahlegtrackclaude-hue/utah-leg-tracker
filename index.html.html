@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AARP Utah Bill Tracker</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh;padding:0 0 2rem;}
+.header{background:#fff;border-bottom:0.5px solid #e0e0d8;padding:0.875rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.header-title{font-size:15px;font-weight:500;color:#1a1a1a;}
+.header-sub{font-size:11px;color:#888;margin-top:1px;}
+.sync-btn{font-size:12px;padding:4px 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#555;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.sync-btn:hover{background:#f5f5f3;}
+.sync-btn.syncing{color:#888;}
+.container{padding:0.875rem 1rem;}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.toolbar input{flex:1;min-width:130px;height:36px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;font-size:13px;color:#1a1a1a;outline:none;}
+.toolbar input:focus{border-color:#888;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;width:100%;}
+select{height:36px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#1a1a1a;font-size:13px;flex:1;min-width:110px;outline:none;}
+.btn{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 12px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#1a1a1a;font-size:13px;cursor:pointer;white-space:nowrap;}
+.btn:hover{background:#f0f0ee;}
+.btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+.btn-primary:hover{background:#333;}
+.count{font-size:12px;color:#999;margin-bottom:8px;}
+.bill-list{display:flex;flex-direction:column;gap:8px;}
+.bill-card{background:#fff;border:0.5px solid #e0e0d8;border-radius:12px;padding:0.75rem 0.875rem;border-left:3px solid #aaa;}
+.bill-card.support{border-left-color:#1D9E75;}
+.bill-card.oppose{border-left-color:#E24B4A;}
+.bill-card.neutral{border-left-color:#aaa;}
+.bill-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.bill-meta{flex:1;min-width:0;}
+.bill-number{font-size:11px;font-weight:500;color:#888;}
+.bill-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-top:2px;line-height:1.4;}
+.bill-sub{font-size:11px;color:#aaa;margin-top:2px;}
+.bill-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.badge{font-size:10px;padding:2px 7px;border-radius:6px;border:0.5px solid;font-weight:500;}
+.badge-support{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;}
+.badge-oppose{background:#FCEBEB;color:#A32D2D;border-color:#F09595;}
+.badge-neutral{background:#f1f0e8;color:#666;border-color:#ccc;}
+.bars{display:flex;gap:2px;align-items:flex-end;}
+.bar{width:5px;border-radius:2px;background:#e0e0d8;}
+.bar.on{background:#378ADD;}
+.flags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center;}
+.flag{font-size:11px;padding:2px 7px;border-radius:6px;border:0.5px solid #d0d0c8;color:#888;cursor:pointer;user-select:none;display:flex;align-items:center;gap:3px;background:#fff;}
+.flag:hover{background:#f5f5f3;}
+.flag.testify-on{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;}
+.flag.access-on{background:#FAEEDA;color:#854F0B;border-color:#EF9F27;}
+.edit-btns{display:flex;gap:5px;margin-left:auto;}
+.btn-sm{font-size:11px;padding:2px 7px;height:24px;border:0.5px solid #d0d0c8;border-radius:6px;background:#fff;color:#888;cursor:pointer;display:inline-flex;align-items:center;gap:3px;}
+.btn-sm:hover{background:#f5f5f3;}
+.notes-toggle{font-size:11px;color:#aaa;cursor:pointer;margin-top:6px;background:none;border:none;padding:0;display:flex;align-items:center;gap:4px;}
+.notes-toggle:hover{color:#666;}
+.notes-section{display:none;margin-top:8px;border-top:0.5px solid #e8e8e0;padding-top:8px;}
+.notes-section.open{display:block;}
+.note-entry{font-size:12px;color:#555;padding:5px 0;border-bottom:0.5px solid #f0f0e8;line-height:1.5;}
+.note-entry:last-of-type{border-bottom:none;}
+.note-meta{font-size:10px;color:#aaa;margin-bottom:1px;}
+.note-row{display:flex;gap:6px;margin-top:8px;}
+.note-row input{font-size:12px;height:32px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:6px;background:#fff;color:#1a1a1a;outline:none;}
+.note-who{width:72px;}
+.note-text{flex:1;}
+.empty{text-align:center;padding:3rem 1rem;color:#aaa;font-size:13px;}
+.loading{text-align:center;padding:3rem 1rem;color:#aaa;font-size:13px;}
+.toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;font-size:12px;padding:6px 14px;border-radius:8px;opacity:0;transition:opacity 0.2s;z-index:999;pointer-events:none;}
+.toast.show{opacity:1;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;z-index:200;}
+.overlay.open{display:flex;}
+@media(min-width:480px){.overlay{align-items:center;}}
+.modal{background:#fff;border-radius:16px 16px 0 0;padding:1.25rem;width:100%;max-width:480px;}
+@media(min-width:480px){.modal{border-radius:12px;margin:1rem;}}
+.modal-handle{width:36px;height:4px;background:#e0e0d8;border-radius:2px;margin:0 auto 1rem;}
+.modal h3{font-size:15px;font-weight:500;margin-bottom:1rem;}
+.fr{margin-bottom:10px;}
+.fr label{font-size:11px;color:#888;display:block;margin-bottom:3px;}
+.fr input,.fr select{width:100%;height:36px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#1a1a1a;font-size:13px;outline:none;}
+.fr input:focus,.fr select:focus{border-color:#888;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.stat{background:#fff;border:0.5px solid #e0e0d8;border-radius:8px;padding:8px;text-align:center;}
+.stat-n{font-size:18px;font-weight:500;color:#1a1a1a;}
+.stat-l{font-size:10px;color:#aaa;margin-top:1px;}
+.stat-n.green{color:#1D9E75;}
+.stat-n.red{color:#E24B4A;}
+.stat-n.blue{color:#378ADD;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">AARP Utah · Bill Tracker</div>
+    <div class="header-sub" id="last-sync">Loading…</div>
+  </div>
+  <button class="sync-btn" onclick="syncNow()" id="sync-btn">
+    <i class="ti ti-refresh"></i> Sync
+  </button>
+</div>
+
+<div class="container">
+  <div class="stat-row" id="stats"></div>
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Search bills…" oninput="render()">
+    <div class="filter-row">
+      <select id="fp" onchange="render()">
+        <option value="">All positions</option>
+        <option value="support">Support</option>
+        <option value="oppose">Oppose</option>
+        <option value="neutral">Neutral</option>
+      </select>
+      <select id="fe" onchange="render()">
+        <option value="">All engagement</option>
+        <option value="3">Full</option>
+        <option value="2">Partial</option>
+        <option value="1">Watch</option>
+      </select>
+      <button class="btn btn-primary" onclick="openModal(null)"><i class="ti ti-plus"></i> Add</button>
+    </div>
+  </div>
+  <div class="count" id="count"></div>
+  <div id="bill-list"><div class="loading">Loading bills…</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="mtitle">Add bill</h3>
+    <div class="fg">
+      <div class="fr"><label>Bill number</label><input id="f-num" placeholder="HB0072"></div>
+      <div class="fr"><label>Sponsor</label><input id="f-sponsor" placeholder="Rep. Wilcox"></div>
+    </div>
+    <div class="fr"><label>Title</label><input id="f-title" placeholder="Short title"></div>
+    <div class="fr"><label>Committee</label><input id="f-committee" placeholder="Committee name"></div>
+    <div class="fr"><label>Status</label><input id="f-status" placeholder="e.g. Assigned to committee"></div>
+    <div class="fg">
+      <div class="fr"><label>Position</label>
+        <select id="f-pos">
+          <option value="neutral">Neutral</option>
+          <option value="support">Support</option>
+          <option value="oppose">Oppose</option>
+        </select>
+      </div>
+      <div class="fr"><label>Engagement</label>
+        <select id="f-eng">
+          <option value="1">Watch ▌</option>
+          <option value="2">Partial ▌▌</option>
+          <option value="3">Full ▌▌▌</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBill()">Save bill</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyEi3FbjO73CW8hjAQsiXMoO1tC0QS_3JStsxnmpVOKnvT7v7lP86PFoecDkrVW1g/exec';
+let bills=[];
+let eid=null;
+let saving=false;
+
+const SB78={
+  id:'sb78-2026',
+  num:'SB0078',
+  title:'Property Tax Relief Amendments',
+  sponsor:'Sen. (TBC)',
+  committee:'Revenue and Taxation',
+  status:'Failed 2026 session — expected return 2027',
+  position:'oppose',
+  engagement:3,
+  testifying:false,
+  access:false,
+  notes:[
+    {who:'System',text:'Eliminated Circuit Breaker Homeowner Tax Credit and Renter Refund. Replaced with property tax deferral. 50% reduction up to $60k income; freeze/defer up to $75k. Deferred taxes due on sale of home.',date:'May 13'},
+    {who:'System',text:'AARP Utah opposed. Bill failed 2026. High likelihood of return 2027 — deferral framing has caucus appeal. Watch Revenue & Taxation interim for workshopping.',date:'May 13'}
+  ]
+};
+
+async function loadFromSheet(){
+  try{
+    const r=await fetch(SCRIPT_URL+'?action=read');
+    const d=await r.json();
+    if(d.bills){
+      bills=d.bills;
+      if(!bills.find(b=>b.id==='sb78-2026')){
+        bills.unshift(SB78);
+        await saveToSheet();
+      }
+    }
+  }catch(e){
+    bills=[SB78];
+    toast('Could not reach Sheet — working offline');
+  }
+  setSync();
+  render();
+}
+
+async function saveToSheet(){
+  if(saving) return;
+  saving=true;
+  document.getElementById('sync-btn').classList.add('syncing');
+  document.getElementById('sync-btn').innerHTML='<i class="ti ti-refresh"></i> Saving…';
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'write',bills})});
+    setSync();
+    toast('Saved');
+  }catch(e){
+    toast('Save failed — check connection');
+  }
+  saving=false;
+  document.getElementById('sync-btn').classList.remove('syncing');
+  document.getElementById('sync-btn').innerHTML='<i class="ti ti-refresh"></i> Sync';
+}
+
+async function syncNow(){
+  document.getElementById('sync-btn').innerHTML='<i class="ti ti-refresh"></i> Syncing…';
+  await loadFromSheet();
+  toast('Synced');
+}
+
+function setSync(){
+  const now=new Date();
+  document.getElementById('last-sync').textContent='Last sync '+now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+
+function barHtml(n){
+  let s='';const h=[8,12,16];
+  for(let i=1;i<=3;i++) s+=`<div class="bar${i<=n?' on':''}" style="height:${h[i-1]}px"></div>`;
+  return `<div class="bars">${s}</div>`;
+}
+function posHtml(p){
+  if(p==='support') return '<span class="badge badge-support">Support</span>';
+  if(p==='oppose') return '<span class="badge badge-oppose">Oppose</span>';
+  return '<span class="badge badge-neutral">Neutral</span>';
+}
+
+function renderStats(){
+  const total=bills.length;
+  const sup=bills.filter(b=>b.position==='support').length;
+  const opp=bills.filter(b=>b.position==='oppose').length;
+  const testifying=bills.filter(b=>b.testifying).length;
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${total}</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-n green">${sup}</div><div class="stat-l">Support</div></div>
+    <div class="stat"><div class="stat-n red">${opp}</div><div class="stat-l">Oppose</div></div>
+    <div class="stat"><div class="stat-n blue">${testifying}</div><div class="stat-l">Testifying</div></div>`;
+}
+
+function render(){
+  renderStats();
+  const q=document.getElementById('search').value.toLowerCase();
+  const fp=document.getElementById('fp').value;
+  const fe=document.getElementById('fe').value;
+  const f=bills.filter(b=>{
+    const t=`${b.num} ${b.title} ${b.sponsor} ${b.committee}`.toLowerCase();
+    if(q&&!t.includes(q)) return false;
+    if(fp&&b.position!==fp) return false;
+    if(fe&&String(b.engagement)!==fe) return false;
+    return true;
+  });
+  document.getElementById('count').textContent=f.length===bills.length?`${bills.length} bill${bills.length!==1?'s':''}`:`${f.length} of ${bills.length} bills`;
+  const el=document.getElementById('bill-list');
+  if(!bills.length){el.innerHTML='<div class="empty">No bills yet — tap Add to start</div>';return;}
+  if(!f.length){el.innerHTML='<div class="empty">No bills match filters</div>';return;}
+  el.innerHTML=f.map(b=>{
+    const notes=b.notes||[];
+    return `<div class="bill-card ${b.position}">
+      <div class="bill-top">
+        <div class="bill-meta">
+          <div class="bill-number">${b.num||'—'}${b.committee?' · '+b.committee:''}</div>
+          <div class="bill-title">${b.title||'Untitled'}</div>
+          ${b.sponsor?`<div class="bill-sub">${b.sponsor}</div>`:''}
+          ${b.status?`<div class="bill-sub">${b.status}</div>`:''}
+        </div>
+        <div class="bill-right">
+          ${posHtml(b.position)}
+          ${barHtml(b.engagement)}
+        </div>
+      </div>
+      <div class="flags">
+        <span class="flag${b.testifying?' testify-on':''}" onclick="tog('${b.id}','testifying')"><i class="ti ti-microphone"></i> Testifying</span>
+        <span class="flag${b.access?' access-on':''}" onclick="tog('${b.id}','access')"><i class="ti ti-key"></i> Access needed</span>
+        <div class="edit-btns">
+          <button class="btn-sm" onclick="openModal('${b.id}')"><i class="ti ti-edit"></i></button>
+          <button class="btn-sm" onclick="del('${b.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <button class="notes-toggle" onclick="toggleNotes('notes-${b.id}')">
+        <i class="ti ti-notes"></i> ${notes.length?notes.length+' note'+(notes.length!==1?'s':''):'Notes'} <i class="ti ti-chevron-down"></i>
+      </button>
+      <div class="notes-section" id="notes-${b.id}">
+        ${notes.map(n=>`<div class="note-entry"><div class="note-meta">${n.who} · ${n.date}</div>${n.text}</div>`).join('')}
+        <div class="note-row">
+          <input class="note-who" id="nwho-${b.id}" placeholder="Name">
+          <input class="note-text" id="ntxt-${b.id}" placeholder="Add note…" onkeydown="if(event.key==='Enter')addNote('${b.id}')">
+          <button class="btn-sm" onclick="addNote('${b.id}')">Add</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleNotes(id){document.getElementById(id).classList.toggle('open');}
+
+async function tog(id,field){
+  const b=bills.find(x=>x.id===id);if(!b)return;
+  b[field]=!b[field];
+  render();
+  await saveToSheet();
+}
+
+async function addNote(id){
+  const b=bills.find(x=>x.id===id);
+  const txt=document.getElementById('ntxt-'+id).value.trim();
+  const who=document.getElementById('nwho-'+id).value.trim()||'You';
+  if(!txt)return;
+  if(!b.notes)b.notes=[];
+  const d=new Date();
+  b.notes.push({who,text:txt,date:d.toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+  render();
+  await saveToSheet();
+  setTimeout(()=>{const n=document.getElementById('notes-'+id);if(n)n.classList.add('open');},30);
+}
+
+function openModal(id){
+  eid=id;
+  document.getElementById('mtitle').textContent=id?'Edit bill':'Add bill';
+  const b=id?bills.find(x=>x.id===id):null;
+  document.getElementById('f-num').value=b?b.num||'':'';
+  document.getElementById('f-title').value=b?b.title||'':'';
+  document.getElementById('f-sponsor').value=b?b.sponsor||'':'';
+  document.getElementById('f-committee').value=b?b.committee||'':'';
+  document.getElementById('f-status').value=b?b.status||'':'';
+  document.getElementById('f-pos').value=b?b.position||'neutral':'neutral';
+  document.getElementById('f-eng').value=b?String(b.engagement||1):'1';
+  document.getElementById('overlay').classList.add('open');
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');eid=null;}
+
+async function saveBill(){
+  const num=document.getElementById('f-num').value.trim();
+  const title=document.getElementById('f-title').value.trim();
+  if(!num&&!title)return;
+  if(eid){
+    const b=bills.find(x=>x.id===eid);
+    if(b){
+      b.num=num;b.title=title;
+      b.sponsor=document.getElementById('f-sponsor').value.trim();
+      b.committee=document.getElementById('f-committee').value.trim();
+      b.status=document.getElementById('f-status').value.trim();
+      b.position=document.getElementById('f-pos').value;
+      b.engagement=parseInt(document.getElementById('f-eng').value);
+    }
+  } else {
+    bills.unshift({
+      id:uid(),num,title,
+      sponsor:document.getElementById('f-sponsor').value.trim(),
+      committee:document.getElementById('f-committee').value.trim(),
+      status:document.getElementById('f-status').value.trim(),
+      position:document.getElementById('f-pos').value,
+      engagement:parseInt(document.getElementById('f-eng').value),
+      testifying:false,access:false,notes:[]
+    });
+  }
+  closeModal();render();
+  await saveToSheet();
+}
+
+async function del(id){
+  if(!confirm('Delete this bill?'))return;
+  bills=bills.filter(x=>x.id!==id);
+  render();
+  await saveToSheet();
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+loadFromSheet();
+</script>
+</body>
+</html>
