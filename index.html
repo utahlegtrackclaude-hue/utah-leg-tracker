@@ -14,22 +14,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sync-btn{font-size:12px;padding:4px 10px;border:0.5px solid #444;border-radius:8px;background:transparent;color:#ccc;cursor:pointer;display:flex;align-items:center;gap:4px;}
 .sync-btn:hover{background:#333;}
 .page{max-width:1400px;margin:0 auto;padding:1rem;}
-
-/* outer: tracker left (2fr), calendar right (1fr) */
 .outer-grid{display:grid;grid-template-columns:1fr;gap:1rem;}
 @media(min-width:768px){.outer-grid{grid-template-columns:2fr 1fr;align-items:start;}}
-
+.right-col{display:flex;flex-direction:column;gap:1rem;}
 .panel{background:#fff;border:0.5px solid #e0e0d8;border-radius:12px;overflow:hidden;}
 .panel-header{padding:0.75rem 1rem;border-bottom:0.5px solid #e8e8e0;display:flex;align-items:center;justify-content:space-between;}
 .panel-title{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
 .panel-body{padding:0.875rem 1rem;}
-
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1rem;}
 .stat{background:#f5f5f3;border-radius:8px;padding:8px;text-align:center;}
 .stat-n{font-size:20px;font-weight:500;}
 .stat-l{font-size:10px;color:#aaa;margin-top:1px;}
 .green{color:#1D9E75;}.red{color:#E24B4A;}.blue{color:#378ADD;}
-
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
 .toolbar input{flex:1;min-width:130px;height:34px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;font-size:13px;color:#1a1a1a;outline:none;}
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;}
@@ -41,11 +37,8 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .btn-icon{width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#666;cursor:pointer;}
 .btn-icon:hover{background:#f0f0ee;}
 .count{font-size:11px;color:#aaa;margin-bottom:8px;}
-
-/* bill grid — always 1 col on mobile, 2 col on desktop */
 #bill-grid{display:grid;grid-template-columns:1fr;gap:8px;}
 @media(min-width:768px){#bill-grid{grid-template-columns:1fr 1fr;}}
-
 .bill-card{border:0.5px solid #e8e8e0;border-radius:10px;padding:0.75rem 0.875rem;border-left:3px solid #ccc;background:#fff;}
 .bill-card.support{border-left-color:#1D9E75;}
 .bill-card.oppose{border-left-color:#E24B4A;}
@@ -83,6 +76,7 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .note-text{flex:1;}
 .empty{text-align:center;padding:2rem 1rem;color:#bbb;font-size:13px;grid-column:1/-1;}
 
+/* CALENDAR */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;border-bottom:0.5px solid #f0f0e8;}
 .cal-week-label{font-size:12px;font-weight:500;}
 .cal-nav-btns{display:flex;gap:5px;align-items:center;}
@@ -108,6 +102,40 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .leg-dot{width:6px;height:6px;border-radius:50%;}
 .leg-dot.t1{background:#378ADD;}.leg-dot.t2{background:#ccc;}
 
+/* DEADLINE WIDGET */
+.deadline-body{padding:1rem;}
+.deadline-main{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
+.deadline-days{font-size:36px;font-weight:500;line-height:1;color:#1a1a1a;}
+.deadline-label{font-size:12px;color:#aaa;}
+.deadline-date{font-size:12px;font-weight:500;color:#555;margin-bottom:4px;}
+.deadline-sub{font-size:11px;color:#aaa;}
+.deadline-none{font-size:13px;color:#bbb;padding:1rem;text-align:center;}
+.deadline-bills{margin-top:10px;padding-top:10px;border-top:0.5px solid #f0f0e8;}
+.deadline-bill-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px;color:#555;}
+.deadline-bill-row+.deadline-bill-row{border-top:0.5px solid #f8f8f5;}
+.deadline-bill-num{font-weight:500;color:#888;font-size:11px;white-space:nowrap;}
+.deadline-bill-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.urgency-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.urgency-red{background:#E24B4A;}
+.urgency-amber{background:#EF9F27;}
+.urgency-green{background:#1D9E75;}
+
+/* NEXT ACTION WIDGET */
+.action-list{display:flex;flex-direction:column;}
+.action-item{padding:0.625rem 1rem;border-bottom:0.5px solid #f5f5f0;display:flex;align-items:flex-start;gap:8px;}
+.action-item:last-child{border-bottom:none;}
+.action-icon{font-size:14px;margin-top:1px;flex-shrink:0;}
+.action-icon.red{color:#E24B4A;}
+.action-icon.amber{color:#EF9F27;}
+.action-icon.blue{color:#378ADD;}
+.action-content{flex:1;min-width:0;}
+.action-title{font-size:12px;font-weight:500;color:#1a1a1a;line-height:1.4;}
+.action-sub{font-size:11px;color:#aaa;margin-top:1px;}
+.action-empty{font-size:13px;color:#bbb;padding:1rem;text-align:center;}
+.action-clear{font-size:10px;color:#bbb;padding:2px 6px;border:0.5px solid #e0e0d8;border-radius:5px;background:#fff;cursor:pointer;margin-left:auto;flex-shrink:0;}
+.action-clear:hover{background:#f5f5f3;}
+
+/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;z-index:200;}
 .overlay.open{display:flex;}
 @media(min-width:480px){.overlay{align-items:center;padding:1rem;}}
@@ -137,6 +165,7 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 <div class="page">
   <div class="outer-grid">
 
+    <!-- LEFT: BILLS -->
     <div>
       <div class="panel">
         <div class="panel-header">
@@ -168,7 +197,10 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
       </div>
     </div>
 
-    <div>
+    <!-- RIGHT: CALENDAR + WIDGETS -->
+    <div class="right-col">
+
+      <!-- CALENDAR -->
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title"><i class="ti ti-calendar"></i> 2026 Interim</div>
@@ -187,8 +219,24 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
           <div class="leg-item"><div class="leg-dot t2"></div> Tier 2</div>
         </div>
       </div>
-    </div>
 
+      <!-- UPCOMING DEADLINE -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><i class="ti ti-clock"></i> Next interim meeting</div>
+        </div>
+        <div id="deadline-body"></div>
+      </div>
+
+      <!-- NEXT ACTION -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><i class="ti ti-alert-circle"></i> Needs attention</div>
+        </div>
+        <div id="action-list"></div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -238,6 +286,7 @@ const ALL_MEETINGS=[
   {date:'2026-11-18',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
 ];
 
+/* ── CALENDAR ── */
 let weekOffset=0;
 function getWeekStart(o){const d=new Date();d.setHours(0,0,0,0);const day=d.getDay();const m=new Date(d);m.setDate(d.getDate()-(day===0?6:day-1)+(o*7));return m;}
 function buildCalendar(){
@@ -262,6 +311,114 @@ function prevWeek(){weekOffset--;buildCalendar();}
 function nextWeek(){weekOffset++;buildCalendar();}
 function goToday(){weekOffset=0;buildCalendar();}
 
+/* ── DEADLINE WIDGET ── */
+function buildDeadline(){
+  const today=new Date();today.setHours(0,0,0,0);
+  // find next meeting day with tier1 committees
+  const next=ALL_MEETINGS.find(m=>{
+    const d=new Date(m.date+'T00:00:00');
+    return d>=today && m.meetings.some(x=>x.tier===1);
+  });
+  const el=document.getElementById('deadline-body');
+  if(!next){el.innerHTML='<div class="deadline-none">No upcoming meetings found</div>';return;}
+  const nd=new Date(next.date+'T00:00:00');
+  const diff=Math.round((nd-today)/(1000*60*60*24));
+  const urgColor=diff<=3?'urgency-red':diff<=7?'urgency-amber':'urgency-green';
+  const tier1meetings=next.meetings.filter(m=>m.tier===1);
+
+  // bills assigned to committees meeting that day
+  const committeeNames=tier1meetings.map(m=>m.name.toLowerCase());
+  const relevantBills=bills.filter(b=>{
+    if(!b.committee)return false;
+    return committeeNames.some(c=>c.includes(b.committee.toLowerCase())||b.committee.toLowerCase().includes(c.split(',')[0].toLowerCase()));
+  });
+
+  let billsHtml='';
+  if(relevantBills.length){
+    billsHtml=`<div class="deadline-bills">
+      <div style="font-size:10px;color:#aaa;margin-bottom:4px;">Your bills on the agenda</div>
+      ${relevantBills.map(b=>`<div class="deadline-bill-row">
+        <div class="urgency-dot ${urgColor}"></div>
+        <span class="deadline-bill-num">${b.num}</span>
+        <span class="deadline-bill-title">${b.title}</span>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  el.innerHTML=`<div class="deadline-body">
+    <div class="deadline-main">
+      <span class="deadline-days">${diff}</span>
+      <span class="deadline-label">${diff===1?'day':'days'} away</span>
+    </div>
+    <div class="deadline-date">${nd.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+    <div class="deadline-sub">${tier1meetings.length} Tier 1 committee${tier1meetings.length!==1?'s':''} meeting</div>
+    ${billsHtml}
+  </div>`;
+}
+
+/* ── NEXT ACTION WIDGET ── */
+function buildActions(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const sevenDaysAgo=new Date(today);sevenDaysAgo.setDate(today.getDate()-7);
+  const actions=[];
+
+  bills.forEach(b=>{
+    // testifying with no recent note
+    if(b.testifying){
+      const notes=b.notes||[];
+      const recentNote=notes.find(n=>{
+        const parts=n.date.split(' ');
+        if(parts.length<2)return false;
+        const months={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+        const nd=new Date(2026,months[parts[0]],parseInt(parts[1]));
+        return nd>=sevenDaysAgo;
+      });
+      if(!recentNote){
+        actions.push({type:'red',icon:'ti-microphone',title:`Testimony prep needed`,sub:`${b.num} · ${b.title}`});
+      }
+    }
+    // access needed unresolved
+    if(b.access){
+      actions.push({type:'amber',icon:'ti-key',title:`Access needed`,sub:`${b.num} · ${b.title}`});
+    }
+    // full engagement, no notes at all
+    if(b.engagement===3&&(!b.notes||b.notes.length===0)){
+      actions.push({type:'blue',icon:'ti-notes',title:`No notes on full engagement bill`,sub:`${b.num} · ${b.title}`});
+    }
+  });
+
+  // next meeting within 7 days
+  const next=ALL_MEETINGS.find(m=>{
+    const d=new Date(m.date+'T00:00:00');
+    const diff=Math.round((d-today)/(1000*60*60*24));
+    return diff>=0&&diff<=7&&m.meetings.some(x=>x.tier===1);
+  });
+  if(next){
+    const d=new Date(next.date+'T00:00:00');
+    const diff=Math.round((d-today)/(1000*60*60*24));
+    if(diff<=7&&diff>0){
+      actions.unshift({type:'red',icon:'ti-calendar-event',title:`Interim meetings in ${diff} day${diff!==1?'s':''}`,sub:`Review agendas and testimony plan`});
+    } else if(diff===0){
+      actions.unshift({type:'red',icon:'ti-calendar-event',title:'Interim meetings today',sub:'Check in on hearing status'});
+    }
+  }
+
+  const el=document.getElementById('action-list');
+  if(!actions.length){
+    el.innerHTML='<div class="action-empty">Nothing needs attention right now</div>';
+    return;
+  }
+  el.innerHTML=actions.map(a=>`
+    <div class="action-item">
+      <i class="ti ${a.icon} action-icon ${a.type}"></i>
+      <div class="action-content">
+        <div class="action-title">${a.title}</div>
+        <div class="action-sub">${a.sub}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── BILLS ── */
 const SB78={id:'sb78-2026',num:'SB0078',title:'Property Tax Relief Amendments',sponsor:'Sen. (TBC)',committee:'Revenue and Taxation',status:'Failed 2026 session — expected return 2027',position:'oppose',engagement:3,testifying:false,access:false,notes:[{who:'System',text:'Eliminated Circuit Breaker Homeowner Tax Credit and Renter Refund. Replaced with property tax deferral. 50% reduction up to $60k income; freeze/defer up to $75k. Deferred taxes due on sale of home.',date:'May 13'},{who:'System',text:'AARP Utah opposed. Bill failed 2026. High likelihood of return 2027 — deferral framing has caucus appeal. Watch Revenue & Taxation interim.',date:'May 13'}]};
 
 let bills=[];let eid=null;let saving=false;
@@ -269,7 +426,7 @@ let bills=[];let eid=null;let saving=false;
 async function loadFromSheet(){
   try{const r=await fetch(SCRIPT_URL+'?action=read');const d=await r.json();if(d.bills){bills=d.bills;if(!bills.find(b=>b.id==='sb78-2026')){bills.unshift(SB78);await saveToSheet();}}}
   catch(e){bills=[SB78];toast('Could not reach Sheet');}
-  setSync();render();
+  setSync();render();buildDeadline();buildActions();
 }
 async function saveToSheet(){
   if(saving)return;saving=true;setSyncLabel('Saving…');
@@ -283,12 +440,10 @@ function setSync(){const n=new Date();document.getElementById('last-sync').textC
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function barHtml(n){let s='';const h=[8,12,16];for(let i=1;i<=3;i++)s+=`<div class="bar${i<=n?' on':''}" style="height:${h[i-1]}px"></div>`;return`<div class="bars">${s}</div>`;}
 function posHtml(p){if(p==='support')return'<span class="badge badge-support">Support</span>';if(p==='oppose')return'<span class="badge badge-oppose">Oppose</span>';return'<span class="badge badge-neutral">Neutral</span>';}
-
 function renderStats(){
   const t=bills.length,s=bills.filter(b=>b.position==='support').length,o=bills.filter(b=>b.position==='oppose').length,ts=bills.filter(b=>b.testifying).length;
   document.getElementById('stats').innerHTML=`<div class="stat"><div class="stat-n">${t}</div><div class="stat-l">Total</div></div><div class="stat"><div class="stat-n green">${s}</div><div class="stat-l">Support</div></div><div class="stat"><div class="stat-n red">${o}</div><div class="stat-l">Oppose</div></div><div class="stat"><div class="stat-n blue">${ts}</div><div class="stat-l">Testifying</div></div>`;
 }
-
 function cardHtml(b){
   const notes=b.notes||[];
   return`<div class="bill-card ${b.position}">
@@ -320,7 +475,6 @@ function cardHtml(b){
     </div>
   </div>`;
 }
-
 function render(){
   renderStats();
   const q=document.getElementById('search').value.toLowerCase();
@@ -338,8 +492,9 @@ function render(){
   if(!bills.length){el.innerHTML='<div class="empty">No bills yet — tap Add bill</div>';return;}
   if(!f.length){el.innerHTML='<div class="empty">No bills match filters</div>';return;}
   el.innerHTML=f.map(b=>cardHtml(b)).join('');
+  buildDeadline();
+  buildActions();
 }
-
 function toggleNotes(id){document.getElementById(id).classList.toggle('open');}
 async function tog(id,field){const b=bills.find(x=>x.id===id);if(!b)return;b[field]=!b[field];render();await saveToSheet();}
 async function addNote(id){
