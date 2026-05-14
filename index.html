@@ -15,18 +15,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sync-btn:hover{background:#333;}
 .page{max-width:1400px;margin:0 auto;padding:1rem;}
 
-/* 3-col desktop: tracker = 2fr, calendar = 1fr */
-@media(min-width:768px){
-  .three-col{display:grid;grid-template-columns:2fr 1fr;gap:1rem;align-items:start;}
-}
+/* outer: tracker left (2fr), calendar right (1fr) */
+.outer-grid{display:grid;grid-template-columns:1fr;gap:1rem;}
+@media(min-width:768px){.outer-grid{grid-template-columns:2fr 1fr;align-items:start;}}
 
-/* Bill tracker itself: 2-col grid on desktop inside the 2fr panel */
-@media(min-width:768px){
-  .bill-inner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-}
-
-.panel{background:#fff;border:0.5px solid #e0e0d8;border-radius:12px;overflow:hidden;margin-bottom:1rem;}
-@media(min-width:768px){.panel{margin-bottom:0;}}
+.panel{background:#fff;border:0.5px solid #e0e0d8;border-radius:12px;overflow:hidden;}
 .panel-header{padding:0.75rem 1rem;border-bottom:0.5px solid #e8e8e0;display:flex;align-items:center;justify-content:space-between;}
 .panel-title{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
 .panel-body{padding:0.875rem 1rem;}
@@ -39,7 +32,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
 .toolbar input{flex:1;min-width:130px;height:34px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;font-size:13px;color:#1a1a1a;outline:none;}
-.toolbar input:focus{border-color:#888;}
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;}
 select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#1a1a1a;font-size:12px;outline:none;}
 .btn{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#1a1a1a;font-size:12px;cursor:pointer;white-space:nowrap;}
@@ -49,6 +41,10 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .btn-icon{width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#666;cursor:pointer;}
 .btn-icon:hover{background:#f0f0ee;}
 .count{font-size:11px;color:#aaa;margin-bottom:8px;}
+
+/* bill grid — always 1 col on mobile, 2 col on desktop */
+#bill-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+@media(min-width:768px){#bill-grid{grid-template-columns:1fr 1fr;}}
 
 .bill-card{border:0.5px solid #e8e8e0;border-radius:10px;padding:0.75rem 0.875rem;border-left:3px solid #ccc;background:#fff;}
 .bill-card.support{border-left-color:#1D9E75;}
@@ -85,14 +81,10 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .note-row input{font-size:12px;height:30px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:6px;background:#fff;color:#1a1a1a;outline:none;}
 .note-who{width:68px;}
 .note-text{flex:1;}
-.empty{text-align:center;padding:2rem 1rem;color:#bbb;font-size:13px;}
+.empty{text-align:center;padding:2rem 1rem;color:#bbb;font-size:13px;grid-column:1/-1;}
 
-/* Mobile bill list — single column */
-.bill-list{display:flex;flex-direction:column;gap:8px;}
-
-/* CALENDAR */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;border-bottom:0.5px solid #f0f0e8;}
-.cal-week-label{font-size:12px;font-weight:500;color:#1a1a1a;}
+.cal-week-label{font-size:12px;font-weight:500;}
 .cal-nav-btns{display:flex;gap:5px;align-items:center;}
 .cal-today-btn{font-size:11px;padding:2px 8px;border:0.5px solid #d0d0c8;border-radius:6px;background:#fff;color:#666;cursor:pointer;}
 .cal-today-btn:hover{background:#f0f0ee;}
@@ -100,7 +92,7 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .cal-day{padding:0.6rem 1rem;}
 .cal-day+.cal-day{border-top:0.5px solid #f5f5f0;}
 .cal-day-header{display:flex;align-items:baseline;gap:6px;margin-bottom:5px;}
-.cal-date-label{font-size:12px;font-weight:500;color:#1a1a1a;}
+.cal-date-label{font-size:12px;font-weight:500;}
 .cal-today-marker{font-size:10px;color:#378ADD;font-weight:500;}
 .cal-meetings{display:flex;flex-direction:column;gap:3px;}
 .cal-meeting{font-size:11px;padding:3px 8px;border-radius:5px;border:0.5px solid #e8e8e0;color:#888;background:#fafaf8;display:flex;align-items:center;gap:5px;line-height:1.4;}
@@ -109,16 +101,13 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .cal-time{font-size:10px;margin-left:auto;white-space:nowrap;flex-shrink:0;color:#aaa;}
 .cal-meeting.tier1 .cal-time{color:#378ADD;}
 .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.dot.t1{background:#378ADD;}
-.dot.t2{background:#ccc;}
+.dot.t1{background:#378ADD;}.dot.t2{background:#ccc;}
 .cal-no-meetings{font-size:12px;color:#ccc;padding:1.25rem 1rem;text-align:center;}
 .cal-legend{display:flex;gap:12px;padding:0.5rem 1rem;border-top:0.5px solid #f0f0e8;}
 .leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#aaa;}
 .leg-dot{width:6px;height:6px;border-radius:50%;}
-.leg-dot.t1{background:#378ADD;}
-.leg-dot.t2{background:#ccc;}
+.leg-dot.t1{background:#378ADD;}.leg-dot.t2{background:#ccc;}
 
-/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;z-index:200;}
 .overlay.open{display:flex;}
 @media(min-width:480px){.overlay{align-items:center;padding:1rem;}}
@@ -129,7 +118,6 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .fr{margin-bottom:10px;}
 .fr label{font-size:11px;color:#888;display:block;margin-bottom:3px;}
 .fr input,.fr select{width:100%;height:34px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#1a1a1a;font-size:13px;outline:none;}
-.fr input:focus,.fr select:focus{border-color:#888;}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;}
 .toast{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;font-size:12px;padding:6px 16px;border-radius:8px;opacity:0;transition:opacity 0.2s;z-index:999;pointer-events:none;white-space:nowrap;}
@@ -147,9 +135,8 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 </div>
 
 <div class="page">
-  <div class="three-col">
+  <div class="outer-grid">
 
-    <!-- LEFT 2/3: BILL TRACKER -->
     <div>
       <div class="panel">
         <div class="panel-header">
@@ -176,12 +163,11 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
             </div>
           </div>
           <div class="count" id="count"></div>
-          <div id="bill-list"><div class="empty">Loading…</div></div>
+          <div id="bill-grid"></div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT 1/3: CALENDAR -->
     <div>
       <div class="panel">
         <div class="panel-header">
@@ -219,18 +205,10 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
     <div class="fr"><label>Status</label><input id="f-status" placeholder="e.g. Assigned to committee"></div>
     <div class="fg">
       <div class="fr"><label>Position</label>
-        <select id="f-pos">
-          <option value="neutral">Neutral</option>
-          <option value="support">Support</option>
-          <option value="oppose">Oppose</option>
-        </select>
+        <select id="f-pos"><option value="neutral">Neutral</option><option value="support">Support</option><option value="oppose">Oppose</option></select>
       </div>
       <div class="fr"><label>Engagement</label>
-        <select id="f-eng">
-          <option value="1">Watch ▌</option>
-          <option value="2">Partial ▌▌</option>
-          <option value="3">Full ▌▌▌</option>
-        </select>
+        <select id="f-eng"><option value="1">Watch ▌</option><option value="2">Partial ▌▌</option><option value="3">Full ▌▌▌</option></select>
       </div>
     </div>
     <div class="modal-actions">
@@ -288,8 +266,6 @@ const SB78={id:'sb78-2026',num:'SB0078',title:'Property Tax Relief Amendments',s
 
 let bills=[];let eid=null;let saving=false;
 
-function isDesktop(){return window.innerWidth>=768;}
-
 async function loadFromSheet(){
   try{const r=await fetch(SCRIPT_URL+'?action=read');const d=await r.json();if(d.bills){bills=d.bills;if(!bills.find(b=>b.id==='sb78-2026')){bills.unshift(SB78);await saveToSheet();}}}
   catch(e){bills=[SB78];toast('Could not reach Sheet');}
@@ -307,10 +283,44 @@ function setSync(){const n=new Date();document.getElementById('last-sync').textC
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function barHtml(n){let s='';const h=[8,12,16];for(let i=1;i<=3;i++)s+=`<div class="bar${i<=n?' on':''}" style="height:${h[i-1]}px"></div>`;return`<div class="bars">${s}</div>`;}
 function posHtml(p){if(p==='support')return'<span class="badge badge-support">Support</span>';if(p==='oppose')return'<span class="badge badge-oppose">Oppose</span>';return'<span class="badge badge-neutral">Neutral</span>';}
+
 function renderStats(){
   const t=bills.length,s=bills.filter(b=>b.position==='support').length,o=bills.filter(b=>b.position==='oppose').length,ts=bills.filter(b=>b.testifying).length;
   document.getElementById('stats').innerHTML=`<div class="stat"><div class="stat-n">${t}</div><div class="stat-l">Total</div></div><div class="stat"><div class="stat-n green">${s}</div><div class="stat-l">Support</div></div><div class="stat"><div class="stat-n red">${o}</div><div class="stat-l">Oppose</div></div><div class="stat"><div class="stat-n blue">${ts}</div><div class="stat-l">Testifying</div></div>`;
 }
+
+function cardHtml(b){
+  const notes=b.notes||[];
+  return`<div class="bill-card ${b.position}">
+    <div class="bill-top">
+      <div class="bill-meta">
+        <div class="bill-number">${b.num||'—'}${b.committee?' · '+b.committee:''}</div>
+        <div class="bill-title">${b.title||'Untitled'}</div>
+        ${b.sponsor?`<div class="bill-sub">${b.sponsor}</div>`:''}
+        ${b.status?`<div class="bill-sub">${b.status}</div>`:''}
+      </div>
+      <div class="bill-right">${posHtml(b.position)}${barHtml(b.engagement)}</div>
+    </div>
+    <div class="flags">
+      <span class="flag${b.testifying?' testify-on':''}" onclick="tog('${b.id}','testifying')"><i class="ti ti-microphone"></i> Testifying</span>
+      <span class="flag${b.access?' access-on':''}" onclick="tog('${b.id}','access')"><i class="ti ti-key"></i> Access needed</span>
+      <div class="edit-btns">
+        <button class="btn-sm" onclick="openModal('${b.id}')"><i class="ti ti-edit"></i></button>
+        <button class="btn-sm" onclick="del('${b.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+    <button class="notes-toggle" onclick="toggleNotes('notes-${b.id}')"><i class="ti ti-notes"></i> ${notes.length?notes.length+' note'+(notes.length!==1?'s':''):'Notes'} <i class="ti ti-chevron-down"></i></button>
+    <div class="notes-section" id="notes-${b.id}">
+      ${notes.map(n=>`<div class="note-entry"><div class="note-meta">${n.who} · ${n.date}</div>${n.text}</div>`).join('')}
+      <div class="note-row">
+        <input class="note-who" id="nwho-${b.id}" placeholder="Name">
+        <input class="note-text" id="ntxt-${b.id}" placeholder="Add note…" onkeydown="if(event.key==='Enter')addNote('${b.id}')">
+        <button class="btn-sm" onclick="addNote('${b.id}')">Add</button>
+      </div>
+    </div>
+  </div>`;
+}
+
 function render(){
   renderStats();
   const q=document.getElementById('search').value.toLowerCase();
@@ -324,47 +334,10 @@ function render(){
     return true;
   });
   document.getElementById('count').textContent=f.length===bills.length?`${bills.length} bill${bills.length!==1?'s':''}`:`${f.length} of ${bills.length}`;
-  const el=document.getElementById('bill-list');
+  const el=document.getElementById('bill-grid');
   if(!bills.length){el.innerHTML='<div class="empty">No bills yet — tap Add bill</div>';return;}
   if(!f.length){el.innerHTML='<div class="empty">No bills match filters</div>';return;}
-
-  const cards=f.map(b=>{
-    const notes=b.notes||[];
-    return`<div class="bill-card ${b.position}">
-      <div class="bill-top">
-        <div class="bill-meta">
-          <div class="bill-number">${b.num||'—'}${b.committee?' · '+b.committee:''}</div>
-          <div class="bill-title">${b.title||'Untitled'}</div>
-          ${b.sponsor?`<div class="bill-sub">${b.sponsor}</div>`:''}
-          ${b.status?`<div class="bill-sub">${b.status}</div>`:''}
-        </div>
-        <div class="bill-right">${posHtml(b.position)}${barHtml(b.engagement)}</div>
-      </div>
-      <div class="flags">
-        <span class="flag${b.testifying?' testify-on':''}" onclick="tog('${b.id}','testifying')"><i class="ti ti-microphone"></i> Testifying</span>
-        <span class="flag${b.access?' access-on':''}" onclick="tog('${b.id}','access')"><i class="ti ti-key"></i> Access needed</span>
-        <div class="edit-btns">
-          <button class="btn-sm" onclick="openModal('${b.id}')"><i class="ti ti-edit"></i></button>
-          <button class="btn-sm" onclick="del('${b.id}')"><i class="ti ti-trash"></i></button>
-        </div>
-      </div>
-      <button class="notes-toggle" onclick="toggleNotes('notes-${b.id}')"><i class="ti ti-notes"></i> ${notes.length?notes.length+' note'+(notes.length!==1?'s':''):'Notes'} <i class="ti ti-chevron-down"></i></button>
-      <div class="notes-section" id="notes-${b.id}">
-        ${notes.map(n=>`<div class="note-entry"><div class="note-meta">${n.who} · ${n.date}</div>${n.text}</div>`).join('')}
-        <div class="note-row">
-          <input class="note-who" id="nwho-${b.id}" placeholder="Name">
-          <input class="note-text" id="ntxt-${b.id}" placeholder="Add note…" onkeydown="if(event.key==='Enter')addNote('${b.id}')">
-          <button class="btn-sm" onclick="addNote('${b.id}')">Add</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  if(isDesktop()){
-    el.innerHTML=`<div class="bill-inner-grid">${cards}</div>`;
-  } else {
-    el.innerHTML=`<div class="bill-list">${cards}</div>`;
-  }
+  el.innerHTML=f.map(b=>cardHtml(b)).join('');
 }
 
 function toggleNotes(id){document.getElementById(id).classList.toggle('open');}
@@ -408,7 +381,6 @@ async function saveBill(){
 async function del(id){if(!confirm('Delete this bill?'))return;bills=bills.filter(x=>x.id!==id);render();await saveToSheet();}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-window.addEventListener('resize',render);
 buildCalendar();
 loadFromSheet();
 </script>
