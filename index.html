@@ -13,18 +13,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .header-sub{font-size:11px;color:#999;margin-top:1px;}
 .sync-btn{font-size:12px;padding:4px 10px;border:0.5px solid #444;border-radius:8px;background:transparent;color:#ccc;cursor:pointer;display:flex;align-items:center;gap:4px;}
 .sync-btn:hover{background:#333;}
-.page{max-width:1200px;margin:0 auto;padding:1rem;}
-@media(min-width:768px){.two-col{display:grid;grid-template-columns:1fr 360px;gap:1rem;align-items:start;}}
+.page{max-width:1400px;margin:0 auto;padding:1rem;}
+
+/* 3-col desktop: tracker = 2fr, calendar = 1fr */
+@media(min-width:768px){
+  .three-col{display:grid;grid-template-columns:2fr 1fr;gap:1rem;align-items:start;}
+}
+
+/* Bill tracker itself: 2-col grid on desktop inside the 2fr panel */
+@media(min-width:768px){
+  .bill-inner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+}
+
 .panel{background:#fff;border:0.5px solid #e0e0d8;border-radius:12px;overflow:hidden;margin-bottom:1rem;}
 @media(min-width:768px){.panel{margin-bottom:0;}}
 .panel-header{padding:0.75rem 1rem;border-bottom:0.5px solid #e8e8e0;display:flex;align-items:center;justify-content:space-between;}
 .panel-title{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;}
 .panel-body{padding:0.875rem 1rem;}
+
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1rem;}
 .stat{background:#f5f5f3;border-radius:8px;padding:8px;text-align:center;}
 .stat-n{font-size:20px;font-weight:500;}
 .stat-l{font-size:10px;color:#aaa;margin-top:1px;}
 .green{color:#1D9E75;}.red{color:#E24B4A;}.blue{color:#378ADD;}
+
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
 .toolbar input{flex:1;min-width:130px;height:34px;padding:0 10px;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;font-size:13px;color:#1a1a1a;outline:none;}
 .toolbar input:focus{border-color:#888;}
@@ -37,8 +49,8 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .btn-icon{width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:0.5px solid #d0d0c8;border-radius:8px;background:#fff;color:#666;cursor:pointer;}
 .btn-icon:hover{background:#f0f0ee;}
 .count{font-size:11px;color:#aaa;margin-bottom:8px;}
-.bill-list{display:flex;flex-direction:column;gap:8px;}
-.bill-card{border:0.5px solid #e8e8e0;border-radius:10px;padding:0.75rem 0.875rem;border-left:3px solid #ccc;}
+
+.bill-card{border:0.5px solid #e8e8e0;border-radius:10px;padding:0.75rem 0.875rem;border-left:3px solid #ccc;background:#fff;}
 .bill-card.support{border-left-color:#1D9E75;}
 .bill-card.oppose{border-left-color:#E24B4A;}
 .bill-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
@@ -74,6 +86,11 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .note-who{width:68px;}
 .note-text{flex:1;}
 .empty{text-align:center;padding:2rem 1rem;color:#bbb;font-size:13px;}
+
+/* Mobile bill list — single column */
+.bill-list{display:flex;flex-direction:column;gap:8px;}
+
+/* CALENDAR */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;border-bottom:0.5px solid #f0f0e8;}
 .cal-week-label{font-size:12px;font-weight:500;color:#1a1a1a;}
 .cal-nav-btns{display:flex;gap:5px;align-items:center;}
@@ -100,6 +117,8 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 .leg-dot{width:6px;height:6px;border-radius:50%;}
 .leg-dot.t1{background:#378ADD;}
 .leg-dot.t2{background:#ccc;}
+
+/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;z-index:200;}
 .overlay.open{display:flex;}
 @media(min-width:480px){.overlay{align-items:center;padding:1rem;}}
@@ -128,7 +147,9 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 </div>
 
 <div class="page">
-  <div class="two-col">
+  <div class="three-col">
+
+    <!-- LEFT 2/3: BILL TRACKER -->
     <div>
       <div class="panel">
         <div class="panel-header">
@@ -155,15 +176,16 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
             </div>
           </div>
           <div class="count" id="count"></div>
-          <div class="bill-list" id="bill-list"><div class="empty">Loading…</div></div>
+          <div id="bill-list"><div class="empty">Loading…</div></div>
         </div>
       </div>
     </div>
 
+    <!-- RIGHT 1/3: CALENDAR -->
     <div>
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title"><i class="ti ti-calendar"></i> 2026 Interim Schedule</div>
+          <div class="panel-title"><i class="ti ti-calendar"></i> 2026 Interim</div>
         </div>
         <div class="cal-nav">
           <div class="cal-week-label" id="cal-week-label"></div>
@@ -175,11 +197,12 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
         </div>
         <div class="cal-body" id="cal-body"></div>
         <div class="cal-legend">
-          <div class="leg-item"><div class="leg-dot t1"></div> Tier 1 — your committees</div>
+          <div class="leg-item"><div class="leg-dot t1"></div> Tier 1</div>
           <div class="leg-item"><div class="leg-dot t2"></div> Tier 2</div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -223,120 +246,24 @@ select{height:34px;padding:0 8px;border:0.5px solid #d0d0c8;border-radius:8px;ba
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyEi3FbjO73CW8hjAQsiXMoO1tC0QS_3JStsxnmpVOKnvT7v7lP86PFoecDkrVW1g/exec';
 
 const ALL_MEETINGS=[
-  {date:'2026-05-19',meetings:[
-    {name:'Appropriations Subcommittees',time:'8:30a',tier:0},
-    {name:'Retirement and Independent Entities',time:'4:00p',tier:2},
-    {name:'Legislative Audit Subcommittee',time:'4:00p',tier:0},
-  ]},
-  {date:'2026-05-20',meetings:[
-    {name:'Business and Labor',time:'8:30a',tier:1},
-    {name:'Government Operations',time:'8:30a',tier:1},
-    {name:'Health and Human Services',time:'8:30a',tier:1},
-    {name:'Political Subdivisions',time:'8:30a',tier:2},
-    {name:'Public Utilities, Energy, and Technology',time:'8:30a',tier:1},
-    {name:'Judiciary',time:'1:15p',tier:1},
-    {name:'Law Enforcement and Criminal Justice',time:'1:15p',tier:1},
-    {name:'Natural Resources, Agriculture, and Environment',time:'1:15p',tier:2},
-    {name:'Revenue and Taxation',time:'1:15p',tier:1},
-    {name:'Transportation',time:'1:15p',tier:2},
-  ]},
-  {date:'2026-06-16',meetings:[
-    {name:'Appropriations Subcommittees',time:'8:30a',tier:0},
-    {name:'Retirement and Independent Entities',time:'4:00p',tier:2},
-  ]},
-  {date:'2026-06-17',meetings:[
-    {name:'Business and Labor',time:'8:30a',tier:1},
-    {name:'Government Operations',time:'8:30a',tier:1},
-    {name:'Health and Human Services',time:'8:30a',tier:1},
-    {name:'Political Subdivisions',time:'8:30a',tier:2},
-    {name:'Public Utilities, Energy, and Technology',time:'8:30a',tier:1},
-    {name:'Judiciary',time:'1:15p',tier:1},
-    {name:'Law Enforcement and Criminal Justice',time:'1:15p',tier:1},
-    {name:'Natural Resources, Agriculture, and Environment',time:'1:15p',tier:2},
-    {name:'Revenue and Taxation',time:'1:15p',tier:1},
-    {name:'Transportation',time:'1:15p',tier:2},
-  ]},
-  {date:'2026-08-18',meetings:[
-    {name:'Appropriations Subcommittees',time:'8:30a',tier:0},
-    {name:'Retirement and Independent Entities',time:'4:00p',tier:2},
-    {name:'Legislative Audit Subcommittee',time:'4:00p',tier:0},
-  ]},
-  {date:'2026-08-19',meetings:[
-    {name:'Business and Labor',time:'8:30a',tier:1},
-    {name:'Government Operations',time:'8:30a',tier:1},
-    {name:'Health and Human Services',time:'8:30a',tier:1},
-    {name:'Political Subdivisions',time:'8:30a',tier:2},
-    {name:'Public Utilities, Energy, and Technology',time:'8:30a',tier:1},
-    {name:'Judiciary',time:'1:15p',tier:1},
-    {name:'Law Enforcement and Criminal Justice',time:'1:15p',tier:1},
-    {name:'Natural Resources, Agriculture, and Environment',time:'1:15p',tier:2},
-    {name:'Revenue and Taxation',time:'1:15p',tier:1},
-    {name:'Transportation',time:'1:15p',tier:2},
-  ]},
-  {date:'2026-09-15',meetings:[
-    {name:'Executive Appropriations',time:'2:00p',tier:0},
-    {name:'Legislative Audit Subcommittee',time:'4:00p',tier:0},
-  ]},
-  {date:'2026-09-16',meetings:[
-    {name:'Business and Labor',time:'8:30a',tier:1},
-    {name:'Government Operations',time:'8:30a',tier:1},
-    {name:'Health and Human Services',time:'8:30a',tier:1},
-    {name:'Political Subdivisions',time:'8:30a',tier:2},
-    {name:'Public Utilities, Energy, and Technology',time:'8:30a',tier:1},
-    {name:'Judiciary',time:'1:15p',tier:1},
-    {name:'Law Enforcement and Criminal Justice',time:'1:15p',tier:1},
-    {name:'Natural Resources, Agriculture, and Environment',time:'1:15p',tier:2},
-    {name:'Revenue and Taxation',time:'1:15p',tier:1},
-    {name:'Transportation',time:'1:15p',tier:2},
-  ]},
-  {date:'2026-10-13',meetings:[
-    {name:'Appropriations Subcommittees',time:'8:30a',tier:0},
-    {name:'Legislative Audit Subcommittee',time:'4:00p',tier:0},
-  ]},
-  {date:'2026-10-14',meetings:[
-    {name:'Business and Labor',time:'8:30a',tier:1},
-    {name:'Government Operations',time:'8:30a',tier:1},
-    {name:'Health and Human Services',time:'8:30a',tier:1},
-    {name:'Political Subdivisions',time:'8:30a',tier:2},
-    {name:'Public Utilities, Energy, and Technology',time:'8:30a',tier:1},
-    {name:'Judiciary',time:'1:15p',tier:1},
-    {name:'Law Enforcement and Criminal Justice',time:'1:15p',tier:1},
-    {name:'Natural Resources, Agriculture, and Environment',time:'1:15p',tier:2},
-    {name:'Revenue and Taxation',time:'1:15p',tier:1},
-    {name:'Transportation',time:'1:15p',tier:2},
-  ]},
-  {date:'2026-11-17',meetings:[
-    {name:'Executive Appropriations',time:'2:00p',tier:0},
-    {name:'Retirement and Independent Entities',time:'4:00p',tier:2},
-    {name:'Legislative Audit Subcommittee',time:'4:00p',tier:0},
-  ]},
-  {date:'2026-11-18',meetings:[
-    {name:'Business and Labor',time:'8:30a',tier:1},
-    {name:'Government Operations',time:'8:30a',tier:1},
-    {name:'Health and Human Services',time:'8:30a',tier:1},
-    {name:'Political Subdivisions',time:'8:30a',tier:2},
-    {name:'Public Utilities, Energy, and Technology',time:'8:30a',tier:1},
-    {name:'Judiciary',time:'1:15p',tier:1},
-    {name:'Law Enforcement and Criminal Justice',time:'1:15p',tier:1},
-    {name:'Natural Resources, Agriculture, and Environment',time:'1:15p',tier:2},
-    {name:'Revenue and Taxation',time:'1:15p',tier:1},
-    {name:'Transportation',time:'1:15p',tier:2},
-  ]},
+  {date:'2026-05-19',meetings:[{name:'Appropriations Subcommittees',time:'8:30a',tier:0},{name:'Retirement and Independent Entities',time:'4:00p',tier:2},{name:'Legislative Audit Subcommittee',time:'4:00p',tier:0}]},
+  {date:'2026-05-20',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
+  {date:'2026-06-16',meetings:[{name:'Appropriations Subcommittees',time:'8:30a',tier:0},{name:'Retirement and Independent Entities',time:'4:00p',tier:2}]},
+  {date:'2026-06-17',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
+  {date:'2026-08-18',meetings:[{name:'Appropriations Subcommittees',time:'8:30a',tier:0},{name:'Retirement and Independent Entities',time:'4:00p',tier:2},{name:'Legislative Audit Subcommittee',time:'4:00p',tier:0}]},
+  {date:'2026-08-19',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
+  {date:'2026-09-15',meetings:[{name:'Executive Appropriations',time:'2:00p',tier:0},{name:'Legislative Audit Subcommittee',time:'4:00p',tier:0}]},
+  {date:'2026-09-16',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
+  {date:'2026-10-13',meetings:[{name:'Appropriations Subcommittees',time:'8:30a',tier:0},{name:'Legislative Audit Subcommittee',time:'4:00p',tier:0}]},
+  {date:'2026-10-14',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
+  {date:'2026-11-17',meetings:[{name:'Executive Appropriations',time:'2:00p',tier:0},{name:'Retirement and Independent Entities',time:'4:00p',tier:2},{name:'Legislative Audit Subcommittee',time:'4:00p',tier:0}]},
+  {date:'2026-11-18',meetings:[{name:'Business and Labor',time:'8:30a',tier:1},{name:'Government Operations',time:'8:30a',tier:1},{name:'Health and Human Services',time:'8:30a',tier:1},{name:'Political Subdivisions',time:'8:30a',tier:2},{name:'Public Utilities, Energy & Technology',time:'8:30a',tier:1},{name:'Judiciary',time:'1:15p',tier:1},{name:'Law Enforcement & Criminal Justice',time:'1:15p',tier:1},{name:'Natural Resources, Ag & Environment',time:'1:15p',tier:2},{name:'Revenue and Taxation',time:'1:15p',tier:1},{name:'Transportation',time:'1:15p',tier:2}]},
 ];
 
 let weekOffset=0;
-
-function getWeekStart(offset){
-  const d=new Date();d.setHours(0,0,0,0);
-  const day=d.getDay();
-  const mon=new Date(d);
-  mon.setDate(d.getDate()-(day===0?6:day-1)+(offset*7));
-  return mon;
-}
-
+function getWeekStart(o){const d=new Date();d.setHours(0,0,0,0);const day=d.getDay();const m=new Date(d);m.setDate(d.getDate()-(day===0?6:day-1)+(o*7));return m;}
 function buildCalendar(){
-  const ws=getWeekStart(weekOffset);
-  const we=new Date(ws);we.setDate(ws.getDate()+6);
+  const ws=getWeekStart(weekOffset);const we=new Date(ws);we.setDate(ws.getDate()+6);
   const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   document.getElementById('cal-week-label').textContent=`${fmt(ws)} – ${fmt(we)}`;
   const today=new Date();today.setHours(0,0,0,0);
@@ -344,27 +271,15 @@ function buildCalendar(){
   for(let i=0;i<7;i++){
     const d=new Date(ws);d.setDate(ws.getDate()+i);
     const ds=d.toISOString().slice(0,10);
-    const dayData=ALL_MEETINGS.find(m=>m.date===ds);
-    const relevant=dayData?dayData.meetings.filter(m=>m.tier>=1):[];
-    if(!relevant.length)continue;
+    const dd=ALL_MEETINGS.find(m=>m.date===ds);
+    const rel=dd?dd.meetings.filter(m=>m.tier>=1):[];
+    if(!rel.length)continue;
     any=true;
-    const isToday=d.getTime()===today.getTime();
-    html+=`<div class="cal-day">
-      <div class="cal-day-header">
-        <span class="cal-date-label">${d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span>
-        ${isToday?'<span class="cal-today-marker">Today</span>':''}
-      </div>
-      <div class="cal-meetings">
-        ${relevant.map(m=>`<div class="cal-meeting ${m.tier===1?'tier1':'tier2'}">
-          <div class="dot ${m.tier===1?'t1':'t2'}"></div>
-          ${m.name}<span class="cal-time">${m.time}</span>
-        </div>`).join('')}
-      </div>
-    </div>`;
+    const isT=d.getTime()===today.getTime();
+    html+=`<div class="cal-day"><div class="cal-day-header"><span class="cal-date-label">${d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span>${isT?'<span class="cal-today-marker">Today</span>':''}</div><div class="cal-meetings">${rel.map(m=>`<div class="cal-meeting ${m.tier===1?'tier1':'tier2'}"><div class="dot ${m.tier===1?'t1':'t2'}"></div>${m.name}<span class="cal-time">${m.time}</span></div>`).join('')}</div></div>`;
   }
   document.getElementById('cal-body').innerHTML=any?html:'<div class="cal-no-meetings">No interim meetings this week</div>';
 }
-
 function prevWeek(){weekOffset--;buildCalendar();}
 function nextWeek(){weekOffset++;buildCalendar();}
 function goToday(){weekOffset=0;buildCalendar();}
@@ -373,12 +288,11 @@ const SB78={id:'sb78-2026',num:'SB0078',title:'Property Tax Relief Amendments',s
 
 let bills=[];let eid=null;let saving=false;
 
+function isDesktop(){return window.innerWidth>=768;}
+
 async function loadFromSheet(){
-  try{
-    const r=await fetch(SCRIPT_URL+'?action=read');
-    const d=await r.json();
-    if(d.bills){bills=d.bills;if(!bills.find(b=>b.id==='sb78-2026')){bills.unshift(SB78);await saveToSheet();}}
-  }catch(e){bills=[SB78];toast('Could not reach Sheet');}
+  try{const r=await fetch(SCRIPT_URL+'?action=read');const d=await r.json();if(d.bills){bills=d.bills;if(!bills.find(b=>b.id==='sb78-2026')){bills.unshift(SB78);await saveToSheet();}}}
+  catch(e){bills=[SB78];toast('Could not reach Sheet');}
   setSync();render();
 }
 async function saveToSheet(){
@@ -413,7 +327,8 @@ function render(){
   const el=document.getElementById('bill-list');
   if(!bills.length){el.innerHTML='<div class="empty">No bills yet — tap Add bill</div>';return;}
   if(!f.length){el.innerHTML='<div class="empty">No bills match filters</div>';return;}
-  el.innerHTML=f.map(b=>{
+
+  const cards=f.map(b=>{
     const notes=b.notes||[];
     return`<div class="bill-card ${b.position}">
       <div class="bill-top">
@@ -444,7 +359,14 @@ function render(){
       </div>
     </div>`;
   }).join('');
+
+  if(isDesktop()){
+    el.innerHTML=`<div class="bill-inner-grid">${cards}</div>`;
+  } else {
+    el.innerHTML=`<div class="bill-list">${cards}</div>`;
+  }
 }
+
 function toggleNotes(id){document.getElementById(id).classList.toggle('open');}
 async function tog(id,field){const b=bills.find(x=>x.id===id);if(!b)return;b[field]=!b[field];render();await saveToSheet();}
 async function addNote(id){
@@ -486,6 +408,7 @@ async function saveBill(){
 async function del(id){if(!confirm('Delete this bill?'))return;bills=bills.filter(x=>x.id!==id);render();await saveToSheet();}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
+window.addEventListener('resize',render);
 buildCalendar();
 loadFromSheet();
 </script>
