@@ -326,25 +326,6 @@ function buildDeadline(){
   const urgColor=diff<=3?'urgency-red':diff<=7?'urgency-amber':'urgency-green';
   const tier1meetings=next.meetings.filter(m=>m.tier===1);
 
-  // bills assigned to committees meeting that day
-  const committeeNames=tier1meetings.map(m=>m.name.toLowerCase());
-  const relevantBills=bills.filter(b=>{
-    if(!b.committee)return false;
-    return committeeNames.some(c=>c.includes(b.committee.toLowerCase())||b.committee.toLowerCase().includes(c.split(',')[0].toLowerCase()));
-  });
-
-  let billsHtml='';
-  if(relevantBills.length){
-    billsHtml=`<div class="deadline-bills">
-      <div style="font-size:10px;color:#aaa;margin-bottom:4px;">Your bills on the agenda</div>
-      ${relevantBills.map(b=>`<div class="deadline-bill-row">
-        <div class="urgency-dot ${urgColor}"></div>
-        <span class="deadline-bill-num">${b.num}</span>
-        <span class="deadline-bill-title">${b.title}</span>
-      </div>`).join('')}
-    </div>`;
-  }
-
   el.innerHTML=`<div class="deadline-body">
     <div class="deadline-main">
       <span class="deadline-days">${diff}</span>
@@ -352,7 +333,6 @@ function buildDeadline(){
     </div>
     <div class="deadline-date">${nd.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
     <div class="deadline-sub">${tier1meetings.length} Tier 1 committee${tier1meetings.length!==1?'s':''} meeting</div>
-    ${billsHtml}
   </div>`;
 }
 
